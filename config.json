@@ -1,7 +1,7 @@
 {
-  "server_ip": "192.168.1.117",
+  "server_ip": "192.168.1.100",
   "port": 27015,
   "connect_timeout": 5,
-  "username": "host",
-  "password": "did123"
+  "username": "",
+  "password": ""
 }
