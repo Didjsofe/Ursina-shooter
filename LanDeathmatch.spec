@@ -1,4 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
+import os
 from PyInstaller.utils.hooks import collect_all
 
 datas = []
@@ -9,6 +10,7 @@ for package in ('ursina', 'panda3d'):
     datas += package_datas
     binaries += package_binaries
     hiddenimports += package_hiddenimports
+datas.append((os.path.join(SPECPATH, 'logo.ico'), '.'))
 
 
 a = Analysis(
@@ -32,6 +34,7 @@ exe = EXE(
     [],
     exclude_binaries=True,
     name='LanDeathmatch',
+    icon=os.path.join(SPECPATH, 'logo.ico'),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

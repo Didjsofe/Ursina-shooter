@@ -23,6 +23,48 @@ from shared.weapons import for_kills
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = os.path.join(ROOT, "players.db")
+_SERVER_ICON_HANDLE = None
+
+def set_console_branding():
+    """Set the classic Windows console title and icon without extra dependencies."""
+    global _SERVER_ICON_HANDLE
+    if os.name != "nt":
+        return
+    try:
+        import ctypes
+        from ctypes import wintypes
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        user32 = ctypes.WinDLL("user32", use_last_error=True)
+        kernel32.GetConsoleWindow.restype = wintypes.HWND
+        kernel32.SetConsoleTitleW.argtypes = (wintypes.LPCWSTR,)
+        user32.SendMessageW.argtypes = (wintypes.HWND, wintypes.UINT,
+                                        wintypes.WPARAM, wintypes.LPARAM)
+        user32.SendMessageW.restype = ctypes.c_ssize_t
+        hwnd = kernel32.GetConsoleWindow()
+        if not hwnd:
+            return  # Windows Terminal may not expose a separate console window.
+
+        kernel32.SetConsoleTitleW("LAN Deathmatch Server")
+        icon_path = os.path.join(ROOT, "logo.ico")
+        if not os.path.isfile(icon_path):
+            return
+
+        IMAGE_ICON = 1
+        LR_LOADFROMFILE = 0x0010
+        WM_SETICON = 0x0080
+        ICON_SMALL, ICON_BIG = 0, 1
+        user32.LoadImageW.argtypes = (wintypes.HINSTANCE, wintypes.LPCWSTR,
+                                      wintypes.UINT, ctypes.c_int, ctypes.c_int,
+                                      wintypes.UINT)
+        user32.LoadImageW.restype = wintypes.HANDLE
+        _SERVER_ICON_HANDLE = user32.LoadImageW(None, icon_path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE)
+        if _SERVER_ICON_HANDLE:
+            user32.SendMessageW(hwnd, WM_SETICON, ICON_SMALL, _SERVER_ICON_HANDLE)
+            user32.SendMessageW(hwnd, WM_SETICON, ICON_BIG, _SERVER_ICON_HANDLE)
+    except (AttributeError, OSError, TypeError):
+        # Icon assignment is cosmetic; it must never prevent the server from starting.
+        return
 
 class GameServer:
     def __init__(self, host="0.0.0.0", port=PORT, db_path=DB_PATH):
@@ -621,4 +663,5 @@ class GameServer:
             self.sock.close()
 
 if __name__ == "__main__":
+    set_console_branding()
     GameServer().serve_forever()

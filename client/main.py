@@ -10,6 +10,7 @@ from ursina.prefabs.first_person_controller import FirstPersonController
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path: sys.path.insert(0, ROOT)
+ICON_PATH = os.path.join(ROOT, "logo.ico")
 from client.network import NetworkClient
 from client.world import RemotePlayer, build_arena
 from shared.constants import CROUCH_HEIGHT, CROUCH_SPEED, SPRINT_SPEED, TICK_RATE, WALK_SPEED
@@ -37,7 +38,9 @@ def load_config():
     return result
 
 cfg = load_config()
-app = Ursina(title="LAN Deathmatch", editor_ui_enabled=False, size=(1280, 720), borderless=False)
+app = Ursina(title="LAN Deathmatch",
+             icon=ICON_PATH if os.path.isfile(ICON_PATH) else "textures/ursina.ico",
+             editor_ui_enabled=False, size=(1280, 720), borderless=False)
 window.title = "LAN Deathmatch"
 window.color = color.rgb32(18, 23, 34)
 # This Ursina version creates its editor panel even when editor_ui_enabled=False.
@@ -130,15 +133,15 @@ def show_login(message=""):
     panel = Entity(parent=camera.ui, model="quad", position=(0, -.02, .82), scale=(.86,.88), color=color.rgb32(36, 35, 49)); login_ui.append(panel)
     accent = Entity(parent=camera.ui, model="quad", position=(-.421, -.02, .78), scale=(.018,.88), color=color.rgb32(226, 91, 83)); login_ui.append(accent)
     top_line = Entity(parent=camera.ui, model="quad", position=(0, .405, .77), scale=(.84,.012), color=color.rgb32(56, 185, 178)); login_ui.append(top_line)
-    title = Text(parent=camera.ui, text="LAN DEATHMATCH", y=.345, scale=1.8, origin=(0,0), color=color.rgb32(246, 192, 151)); login_ui.append(title)
-    subtitle = Text(parent=camera.ui, text="COMBATE EN RED  ·  DEATHMATCH", y=.285, scale=.65, origin=(0,0), color=color.rgb32(84, 208, 196)); login_ui.append(subtitle)
+    title = Text(parent=camera.ui, text="LAN DEATHMATCH", y=.345, scale=2.3, origin=(0,0), color=color.rgb32(246, 192, 151)); login_ui.append(title)
+    subtitle = Text(parent=camera.ui, text="COMBATE EN RED  ·  DEATHMATCH", y=.285, scale=1.0, origin=(0,0), color=color.rgb32(84, 208, 196)); login_ui.append(subtitle)
     username = InputField(parent=camera.ui, y=.16, scale=(.52,.06), default_value=cfg.get("username", ""), color=color.rgb32(72, 79, 94)); login_ui.append(username)
     password = InputField(parent=camera.ui, y=.01, scale=(.52,.06), password=True, default_value=cfg.get("password", ""), color=color.rgb32(72, 79, 94)); login_ui.append(password)
     host = InputField(parent=camera.ui, y=-.14, scale=(.52,.06), default_value=cfg.get("server_ip", "127.0.0.1"), color=color.rgb32(72, 79, 94)); login_ui.append(host)
     for field in (username, password, host):
         field.text_color = color.rgb32(246, 232, 214)
         field.highlight_color = color.rgb32(98, 112, 127)
-    status = Text(parent=camera.ui, text=message, y=-.245, scale=.8, origin=(0,0), color=color.rgb32(255, 151, 132)); login_ui.append(status)
+    status = Text(parent=camera.ui, text=message, y=-.245, scale=1.0, origin=(0,0), color=color.rgb32(255, 151, 132)); login_ui.append(status)
     def login():
         global net, local_id
         status.text = "Conectando…"
@@ -155,7 +158,7 @@ def show_login(message=""):
     exit_btn = Button(parent=camera.ui, text="Salir del juego", y=-.425, scale=(.32,.06), color=color.rgb32(57, 67, 82), highlight_color=color.rgb32(78, 96, 111), on_click=application.quit); login_ui.append(exit_btn)
     # Center the three labels on their matching fields to avoid uneven Spanish alignment.
     for label, y in [("Usuario",.22),("Contraseña",.07),("IP del servidor",-.08)]:
-        label_obj = Text(parent=camera.ui, text=label, x=0, y=y, scale=.75, origin=(0,0), color=color.rgb32(190, 205, 219)); login_ui.append(label_obj)
+        label_obj = Text(parent=camera.ui, text=label, x=0, y=y, scale=1.0, origin=(0,0), color=color.rgb32(190, 205, 219)); login_ui.append(label_obj)
 
 def enter_game(info):
     global player, server_position, current_kills, current_deaths, current_match_kills, current_match_deaths
@@ -205,16 +208,16 @@ def enter_game(info):
     game_ui.append(shotgun_crosshair)
     initial_score = f"DEATHMATCH — {current_match_kills}/100 bajas" if match_active else "ENTRENAMIENTO — las bajas no cuentan"
     score_text = Text(parent=camera.ui, text=initial_score, y=.46, scale=1.15, origin=(0,0)); game_ui.append(score_text)
-    weapon_text = Text(parent=camera.ui, text="", x=.86, y=-.39, origin=(1,0), scale=.8); game_ui.append(weapon_text)
-    ammo_text = Text(parent=camera.ui, text="", x=.86, y=-.47, origin=(1,0), scale=.75, color=color.rgb32(235, 230, 216)); game_ui.append(ammo_text)
-    leaderboard = Text(parent=camera.ui, text="", x=.78, y=.43, origin=(1,1), scale=.8, background=True); game_ui.append(leaderboard)
+    weapon_text = Text(parent=camera.ui, text="", x=.86, y=-.39, origin=(1,0), scale=1.0); game_ui.append(weapon_text)
+    ammo_text = Text(parent=camera.ui, text="", x=.86, y=-.47, origin=(1,0), scale=1.0, color=color.rgb32(235, 230, 216)); game_ui.append(ammo_text)
+    leaderboard = Text(parent=camera.ui, text="", x=.78, y=.43, origin=(1,1), scale=1.0, background=True); game_ui.append(leaderboard)
     stat_panel = Entity(parent=camera.ui, enabled=False)
     Entity(parent=stat_panel, model="quad", position=(0,0,.8), scale=(.86,.68), color=color.rgb32(28,32,43))
     Entity(parent=stat_panel, model="quad", position=(0,.315,.75), scale=(.86,.012), color=color.rgb32(56,185,178))
-    Text(parent=stat_panel, text="ESTADÍSTICAS DE LA PARTIDA", y=.265, scale=.88, origin=(0,0), color=color.rgb32(246,192,151))
-    Text(parent=stat_panel, text="JUGADOR", x=-.34, y=.155, scale=.62, origin=(-1,0), color=color.rgb32(84,208,196))
-    Text(parent=stat_panel, text="BAJAS", x=.14, y=.155, scale=.62, origin=(1,0), color=color.rgb32(84,208,196))
-    Text(parent=stat_panel, text="MUERTES", x=.37, y=.155, scale=.62, origin=(1,0), color=color.rgb32(84,208,196))
+    Text(parent=stat_panel, text="ESTADÍSTICAS DE LA PARTIDA", y=.265, scale=1.5, origin=(0,0), color=color.rgb32(246,192,151))
+    Text(parent=stat_panel, text="JUGADOR", x=-.42, y=.155, scale=1.0, origin=(-1,0), color=color.rgb32(84,208,196))
+    Text(parent=stat_panel, text="BAJAS", x=.155, y=.155, scale=1.0, origin=(1,0), color=color.rgb32(84,208,196))
+    Text(parent=stat_panel, text="MUERTES", x=.425, y=.155, scale=1.0, origin=(1,0), color=color.rgb32(84,208,196))
     game_ui.append(stat_panel)
     initial_notice = "PARTIDA EN CURSO" if match_active else "ENTRENAMIENTO LIBRE — puedes jugar en solitario"
     notice = Text(parent=camera.ui, text=initial_notice, y=.34, scale=1.1, origin=(0,0), color=color.yellow); game_ui.append(notice)
@@ -364,12 +367,12 @@ def render_stats(rows):
         username = row["username"]
         if len(username) > 14:
             username = username[:13] + "…"
-        app.stat_rows.append(Text(parent=app.stat_panel, text=username, x=-.34, y=y,
-                                  scale=.62, origin=(-1,0), color=player_color))
-        app.stat_rows.append(Text(parent=app.stat_panel, text=str(row["kills"]), x=.14, y=y,
-                                  scale=.62, origin=(1,0), color=color.rgb32(226,231,235)))
-        app.stat_rows.append(Text(parent=app.stat_panel, text=str(row["deaths"]), x=.37, y=y,
-                                  scale=.62, origin=(1,0), color=color.rgb32(226,231,235)))
+        app.stat_rows.append(Text(parent=app.stat_panel, text=username, x=-.36, y=y,
+                                  scale=1.0, origin=(-1,0), color=player_color))
+        app.stat_rows.append(Text(parent=app.stat_panel, text=str(row["kills"]), x=.10, y=y,
+                                  scale=1.0, origin=(1,0), color=color.rgb32(226,231,235)))
+        app.stat_rows.append(Text(parent=app.stat_panel, text=str(row["deaths"]), x=.33, y=y,
+                                  scale=1.0, origin=(1,0), color=color.rgb32(226,231,235)))
 
 def sync_match_ui(active):
     app.notice.text = "PARTIDA EN CURSO" if active else "ENTRENAMIENTO LIBRE — puedes jugar en solitario"
