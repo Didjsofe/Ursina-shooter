@@ -1,6 +1,6 @@
 # LAN Deathmatch (Python 3.12 + Ursina)
 
-<p align="center"><img src="logo.png" alt="LAN Deathmatch" width="240"></p>
+<p align="center"><img src="logo.ico" alt="LAN Deathmatch" width="240"></p>
 
 Локальный сетевой FPS для одной LAN. Единственный режим — Deathmatch, победа при 100 убийствах в одном матче. Сервер запускается отдельным консольным процессом и не требует сторонних библиотек; клиент использует Ursina.
 
