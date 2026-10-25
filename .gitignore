@@ -1,0 +1,15 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+players.db
+
+config.json
+
+build/
+dist/
+*.spec
+
+.DS_Store
+Thumbs.db

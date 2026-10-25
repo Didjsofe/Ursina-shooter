@@ -1,5 +1,7 @@
 # LAN Deathmatch (Python 3.12 + Ursina)
 
+<p align="center"><img src="logo.png" alt="LAN Deathmatch" width="240"></p>
+
 Локальный сетевой FPS для одной LAN. Единственный режим — Deathmatch, победа при 100 убийствах в одном матче. Сервер запускается отдельным консольным процессом и не требует сторонних библиотек; клиент использует Ursina.
 
 ## Архитектура и протокол
@@ -16,6 +18,8 @@ client.py (Ursina) ── TCP, JSON + LF ── server.py ── SQLite players.
 
 ```text
 client.py                 запуск клиента
+logo.ico                  иконка окна и клиентского EXE
+logo.png                  логотип для README/GitHub
 client/main.py             Ursina: вход, управление, HUD, событие клавиш
 client/network.py          TCP-соединение и поток чтения
 client/world.py            арена и удалённые игроки
@@ -66,7 +70,7 @@ server> startmatch
 
 ```powershell
 python -m pip install ursina pyinstaller
-python -m PyInstaller --noconfirm --clean --workpath build --distpath dist LanDeathmatch.spec
+python -m PyInstaller --noconfirm --clean --workpath build_displayfix --distpath dist_displayfix LanDeathmatch.spec
 ```
 
 Готовый EXE будет в `dist_displayfix\LanDeathmatch\LanDeathmatch.exe`. Переносите всю папку `LanDeathmatch` вместе с `_internal`, а не только EXE. Рядом с EXE положите `config.json`. Каталог `shared` и `client` PyInstaller соберёт как импортируемые модули. На клиентских ПК Python и права администратора не нужны. Сервер запускается отдельно командой `python server.py` и для него нужен Python 3.12.
